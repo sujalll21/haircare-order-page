@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leucita's Shop - Order Now</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tabular { font-variant-numeric: tabular-nums; }
+    .btn { height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+    .input { height: 44px; }
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <main class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Product Section -->
+    <section class="card bg-white p-6 md:p-8 rounded-2xl shadow-md">
+      <img id="productImage" src="1-Product.png" alt="Product" class="rounded-xl mb-4 w-full object-cover">
+      <h1 id="productTitle" class="text-2xl font-bold mb-2">Hair Growth Shampoo</h1>
+      <p id="productDesc" class="text-gray-600 mb-4">Nourishing shampoo with natural ingredients for healthy, shiny hair.</p>
+      <div class="text-2xl font-semibold">₹<span id="price" class="tabular"></span></div>
+    </section>
+
+    <!-- Order Form Section -->
+    <section class="card bg-white p-6 md:p-8 rounded-2xl shadow-md md:sticky md:top-4">
+      <h2 class="text-xl font-semibold mb-4">Order Now</h2>
+      <form id="orderForm" class="space-y-4">
+        
+        <!-- Product Selection -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Select Product</label>
+          <select id="productSelect" class="input w-full border rounded-lg px-3">
+            <option value="growth-shampoo">Hair Growth Shampoo</option>
+            <option value="growth-conditioner">Hair Growth Conditioner</option>
+            <option value="dandruff-shampoo">Anti Dandruff Shampoo</option>
+            <option value="dandruff-conditioner">Anti Dandruff Conditioner</option>
+            <option value="serum">Hair Serum</option>
+          </select>
+        </div>
+
+        <!-- Customer Info -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Full Name</label>
+          <input type="text" id="custName" required class="input w-full border rounded-lg px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Email</label>
+          <input type="email" id="custEmail" required class="input w-full border rounded-lg px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Phone</label>
+          <input type="tel" id="custPhone" required class="input w-full border rounded-lg px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Pincode</label>
+          <input type="number" id="custPincode" required class="input w-full border rounded-lg px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Address</label>
+          <textarea id="custAddress" required class="input w-full border rounded-lg px-3 py-2 h-24"></textarea>
+        </div>
+
+        <!-- Quantity -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Quantity</label>
+          <div class="flex items-center gap-2 w-full md:w-40">
+            <button type="button" class="btn w-11 border rounded-lg" onclick="stepQty(-1)">−</button>
+            <input id="qty" type="number" min="1" value="1" class="input w-20 text-center border rounded-lg" />
+            <button type="button" class="btn w-11 border rounded-lg" onclick="stepQty(1)">+</button>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Payment Method</label>
+          <div class="flex gap-4">
+            <label><input type="radio" name="payment" value="cod" checked> Cash on Delivery</label>
+            <label><input type="radio" name="payment" value="upi"> UPI</label>
+          </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="pt-4 border-t">
+          <div class="flex justify-between"><span>Subtotal</span><span>₹<span id="ui_subtotal" class="tabular">0</span></span></div>
+          <div class="flex justify-between"><span>Shipping</span><span>₹<span id="ui_shipping" class="tabular">0</span></span></div>
+          <div class="flex justify-between font-semibold text-lg"><span>Total</span><span>₹<span id="ui_total" class="tabular">0</span></span></div>
+        </div>
+
+        <!-- UPI Info -->
+        <div id="upiBox" class="hidden bg-gray-50 p-3 rounded-lg text-sm">
+          Pay using UPI ID: <span id="upiId" class="font-mono">yourupiid@bank</span>
+          <button type="button" onclick="copyUPI()" class="ml-2 px-2 py-1 border rounded">Copy</button>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex items-center gap-3 pt-2">
+          <button id="placeOrder" type="submit" class="btn w-full bg-blue-600 text-white rounded-lg">Place Order</button>
+          <a id="whatsappBtn" target="_blank" class="btn w-full border border-green-600 text-green-600 rounded-lg whitespace-nowrap">Order via WhatsApp</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const shipping = 50;
+    const products = {
+      "growth-shampoo": { title: "Hair Growth Shampoo", price: 299, img: "1-Product.png", desc: "Nourishing shampoo for hair growth." },
+      "growth-conditioner": { title: "Hair Growth Conditioner", price: 249, img: "2-Product.png", desc: "Conditioner for smooth and shiny hair." },
+      "dandruff-shampoo": { title: "Anti Dandruff Shampoo", price: 279, img: "3-Product.png", desc: "Controls dandruff and soothes scalp." },
+      "dandruff-conditioner": { title: "Anti Dandruff Conditioner", price: 229, img: "4-Product.png", desc: "Hydrating conditioner for dandruff care." },
+      "serum": { title: "Hair Serum", price: 399, img: "5-Product.png", desc: "Serum for shine and protection." },
+    };
+
+    const productSelect = document.getElementById("productSelect");
+    const productImage = document.getElementById("productImage");
+    const productTitle = document.getElementById("productTitle");
+    const productDesc = document.getElementById("productDesc");
+    const priceEl = document.getElementById("price");
+
+    function loadProduct() {
+      const key = productSelect.value;
+      const p = products[key];
+      productImage.src = p.img;
+      productTitle.innerText = p.title;
+      productDesc.innerText = p.desc;
+      priceEl.innerText = p.price;
+      updateTotals();
+    }
+
+    function updateTotals() {
+      const key = productSelect.value;
+      const qty = parseInt(document.getElementById("qty").value) || 1;
+      const subtotal = products[key].price * qty;
+      const total = subtotal + shipping;
+      document.getElementById("ui_subtotal").innerText = subtotal;
+      document.getElementById("ui_shipping").innerText = shipping;
+      document.getElementById("ui_total").innerText = total;
+    }
+
+    function stepQty(change) {
+      const qtyInput = document.getElementById("qty");
+      let qty = parseInt(qtyInput.value) || 1;
+      qty = Math.max(1, qty + change);
+      qtyInput.value = qty;
+      updateTotals();
+    }
+
+    function copyUPI() {
+      const upiId = document.getElementById("upiId").innerText;
+      navigator.clipboard.writeText(upiId);
+      alert("UPI ID copied: " + upiId);
+    }
+
+    // Handle payment toggle
+    document.querySelectorAll("input[name=payment]").forEach(radio => {
+      radio.addEventListener("change", function() {
+        document.getElementById("upiBox").classList.toggle("hidden", this.value !== "upi");
+      });
+    });
+
+    // WhatsApp Order Button
+    function updateWhatsAppLink() {
+      const key = productSelect.value;
+      const qty = document.getElementById("qty").value;
+      const total = document.getElementById("ui_total").innerText;
+      const name = document.getElementById("custName").value;
+      const phone = document.getElementById("custPhone").value;
+      const address = document.getElementById("custAddress").value;
+      const pay = document.querySelector("input[name=payment]:checked").value;
+
+      const msg = `Hello, I want to order:%0AProduct: ${products[key].title}%0AQty: ${qty}%0ATotal: ₹${total}%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}%0APayment: ${pay.toUpperCase()}`;
+      document.getElementById("whatsappBtn").href = `https://wa.me/919730608354?text=${msg}`;
+    }
+
+    document.getElementById("orderForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      alert("Order placed successfully! (Backend integration goes here)");
+    });
+
+    document.getElementById("orderForm").addEventListener("input", updateWhatsAppLink);
+
+    // Init
+    loadProduct();
+    productSelect.addEventListener("change", loadProduct);
+    document.getElementById("qty").addEventListener("input", updateTotals);
+  </script>
+</body>
+</html>
