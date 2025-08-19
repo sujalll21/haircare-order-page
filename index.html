@@ -95,6 +95,32 @@
         </section>
     </main>
 
+    <section class="w-full max-w-xl mx-auto mt-12 mb-6 bg-white p-6 md:p-8 rounded-2xl shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-center">Leave Feedback or Sign Up</h2>
+        <p class="text-gray-600 text-center mb-6">Let us know what you think or sign up for updates!</p>
+        <form id="feedbackForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1" for="feedbackName">Full Name</label>
+                <input type="text" id="feedbackName" required class="input w-full border rounded-lg px-3 py-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1" for="feedbackEmail">Email</label>
+                <input type="email" id="feedbackEmail" required class="input w-full border rounded-lg px-3 py-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1" for="feedbackPhone">Phone</label>
+                <input type="tel" id="feedbackPhone" required class="input w-full border rounded-lg px-3 py-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1" for="feedbackMessage">Your Feedback</label>
+                <textarea id="feedbackMessage" rows="4" class="input w-full border rounded-lg px-3 py-2"></textarea>
+            </div>
+            <div class="pt-2">
+                <button type="submit" class="btn w-full bg-blue-600 text-white rounded-lg">Submit Feedback</button>
+            </div>
+        </form>
+    </section>
+
     <script>
         const shipping = 50;
         const products = {
@@ -167,7 +193,7 @@
             whatsappBtn.href = `https://wa.me/919730608354?text=${msg}`;
         }
 
-        // Event listener for the form submission
+        // Event listener for the order form submission
         document.getElementById("orderForm").addEventListener("submit", function(e){
             e.preventDefault();
             alert("Order placed successfully! (Backend integration goes here)");
@@ -175,6 +201,28 @@
 
         // Event listener to update the WhatsApp link when the button is clicked
         whatsappBtn.addEventListener("click", updateWhatsAppLink);
+
+        // New JavaScript for the feedback form
+        document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            // Retrieve form data
+            const name = document.getElementById("feedbackName").value;
+            const email = document.getElementById("feedbackEmail").value;
+            const phone = document.getElementById("feedbackPhone").value;
+            const message = document.getElementById("feedbackMessage").value;
+            
+            // This is where you would send the data to a backend server.
+            // For now, an alert will show the collected data.
+            alert(`Feedback Submitted!
+            Name: ${name}
+            Email: ${email}
+            Phone: ${phone}
+            Message: ${message}`);
+
+            // You can clear the form after submission
+            this.reset();
+        });
 
         // Init
         loadProduct();
