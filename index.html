@@ -124,11 +124,11 @@
     <script>
         const shipping = 50;
         const products = {
-            "growth-shampoo": { title: "Hair Growth Shampoo", price: 299, img: "1-Product.png", desc: "Nourishing shampoo for hair growth." },
-            "growth-conditioner": { title: "Hair Growth Conditioner", price: 249, img: "2-Product.png", desc: "Conditioner for smooth and shiny hair." },
-            "dandruff-shampoo": { title: "Anti Dandruff Shampoo", price: 279, img: "3-Product.png", desc: "Controls dandruff and soothes scalp." },
-            "dandruff-conditioner": { title: "Anti Dandruff Conditioner", price: 229, img: "4-Product.png", desc: "Hydrating conditioner for dandruff care." },
-            "serum": { title: "Hair Serum", price: 399, img: "5-Product.png", desc: "Serum for shine and protection." },
+            "growth-shampoo": { title: "Hair Growth Shampoo", price: 299, img: "1-Product.png", desc: "Nourishing shampoo for hair growth.", link: "https://yourlink.com/buy-growth-shampoo" },
+            "growth-conditioner": { title: "Hair Growth Conditioner", price: 249, img: "2-Product.png", desc: "Conditioner for smooth and shiny hair.", link: "https://yourlink.com/buy-growth-conditioner" },
+            "dandruff-shampoo": { title: "Anti Dandruff Shampoo", price: 279, img: "3-Product.png", desc: "Controls dandruff and soothes scalp.", link: "https://yourlink.com/buy-dandruff-shampoo" },
+            "dandruff-conditioner": { title: "Anti Dandruff Conditioner", price: 229, img: "4-Product.png", desc: "Hydrating conditioner for dandruff care.", link: "https://yourlink.com/buy-dandruff-conditioner" },
+            "serum": { title: "Hair Serum", price: 399, img: "5-Product.png", desc: "Serum for shine and protection.", link: "https://yourlink.com/buy-serum" },
         };
 
         const productSelect = document.getElementById("productSelect");
@@ -196,7 +196,8 @@
         // Event listener for the order form submission
         document.getElementById("orderForm").addEventListener("submit", function(e){
             e.preventDefault();
-            alert("Order placed successfully! (Backend integration goes here)");
+            const key = productSelect.value;
+            window.location.href = products[key].link; // Redirects to product-specific checkout link
         });
 
         // Event listener to update the WhatsApp link when the button is clicked
@@ -212,15 +213,12 @@
             const phone = document.getElementById("feedbackPhone").value;
             const message = document.getElementById("feedbackMessage").value;
             
-            // This is where you would send the data to a backend server.
-            // For now, an alert will show the collected data.
             alert(`Feedback Submitted!
             Name: ${name}
             Email: ${email}
             Phone: ${phone}
             Message: ${message}`);
 
-            // You can clear the form after submission
             this.reset();
         });
 
